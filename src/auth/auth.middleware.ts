@@ -15,7 +15,6 @@ class AuthMiddleware {
       // Despues, no olvidar
     }
   }
-
   //   login
   async login(req: Request, res: Response, next: NextFunction) {
     try {
