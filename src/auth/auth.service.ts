@@ -21,7 +21,6 @@ class AuthService {
       return responseHTTP.http500();
     }
   }
-
   // login
   async login(data: IFieldsAuth) {
     try {
