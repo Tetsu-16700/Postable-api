@@ -1,5 +1,5 @@
 import { responseHTTP } from "../model/response";
-import { IFieldsAuth } from "./models/auth.interfaces";
+import { IEditMe, IFieldsAuth } from "./models/auth.interfaces";
 import { userService } from "./user.service";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -43,6 +43,59 @@ class AuthService {
       return responseHTTP.http200(undefined, { token });
     } catch (error) {
       return responseHTTP.http500();
+    }
+  }
+
+  // me
+  async me(token: string) {
+    try {
+      const res_validate = await this.validateToken(token);
+      if (!res_validate.response.ok) return res_validate;
+      const user = res_validate.response.data;
+      const { password, ...newData } = user;
+      return responseHTTP.http200("ok", newData);
+    } catch (error) {
+      return responseHTTP.http500();
+    }
+  }
+
+  // edit me
+  async editMe(token: string, data: IEditMe) {
+    try {
+      const res_validate = await this.validateToken(token);
+      if (!res_validate.response.ok) return res_validate;
+      const res_edit = await userService.editUser(
+        data,
+        res_validate.response.data.id
+      );
+      return res_edit;
+    } catch (error) {
+      return responseHTTP.http500();
+    }
+  }
+
+  // dlete
+  async deleteMe(token: string) {
+    try {
+      const res_validate = await this.validateToken(token);
+      if (!res_validate.response.ok) return res_validate;
+      const res_delete = await userService.deleteUser(
+        res_validate.response.data.id
+      );
+      return res_delete;
+    } catch (error) {
+      return responseHTTP.http500();
+    }
+  }
+
+// validacion de token
+  private async validateToken(token: string) {
+    try {
+      const token_decrypt: any = jwt.verify(token, "super-secret");
+      const res_user = await userService.findUserById(token_decrypt.id);
+      return res_user;
+    } catch (error) {
+      return responseHTTP.http401("Token no valid");
     }
   }
 }
