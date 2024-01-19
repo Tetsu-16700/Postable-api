@@ -1,3 +1,4 @@
+-- pgAdmin
 -- Crear la tabla Users
 CREATE TABLE Users (
     id SERIAL PRIMARY KEY,
