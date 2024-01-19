@@ -12,7 +12,11 @@ class AuthController {
   }
 
   // Login
-  async login(req: Request, res: Response) {}
+  async login(req: Request, res: Response) {
+    const data: IFieldsAuth = req.body;
+    const response = await authService.login(data);
+    res.status(response.code).json(response.response);
+  }
   
   // Me
   async me(req: Request, res: Response) {}

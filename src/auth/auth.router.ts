@@ -12,7 +12,7 @@ authRouter.post(
   authController.signup
 );
 
-authRouter.post(`${prefix}/login`);
+authRouter.post(`${prefix}/login`, authMiddleware.login, authController.login);
 authRouter.get(`${prefix}/me`);
 authRouter.patch(`${prefix}/me`);
 authRouter.delete(`${prefix}/me`);
