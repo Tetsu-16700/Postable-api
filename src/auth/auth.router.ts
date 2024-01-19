@@ -12,9 +12,9 @@ authRouter.post(
   authController.signup
 );
 
-authRouter.post(`${prefix}/login`);
-authRouter.get(`${prefix}/me`);
-authRouter.patch(`${prefix}/me`);
-authRouter.delete(`${prefix}/me`);
+authRouter.post(`${prefix}/login`, authMiddleware.login, authController.login);
+authRouter.get(`${prefix}/me`, authMiddleware.editMe, authController.editMe);
+authRouter.patch(`${prefix}/me`, authController.editMe);
+authRouter.delete(`${prefix}/me`, authController.deleteMe);
 
 export default authRouter;
