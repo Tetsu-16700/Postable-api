@@ -4,6 +4,12 @@ class PostQuery {
   private readonly table_post = "Posts";
   private readonly table_like = "Likes";
 
+  async findPost(postId: string) {
+    const sql = `select*from ${this.table_post} where id=$1`;
+    const response = await query(sql, [postId]);
+    return response.rows[0];
+  }
+
   // POST /posts (Crear Nuevo Post)
   async createPost(data: { userId: string; content: string }) {
     const currentDate = new Date();
@@ -15,6 +21,14 @@ class PostQuery {
       formattedDate,
       formattedDate,
     ]);
+    return response.rows[0];
+  }
+
+  async editPost(content: string, postId: string) {
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString();
+    const sql = `update ${this.table_post} set content=$1,updatedAt=$2 where id=$3 returning*`;
+    const response = await query(sql, [content, formattedDate, postId]);
     return response.rows[0];
   }
 
