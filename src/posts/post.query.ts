@@ -25,12 +25,18 @@ class PostQuery {
     return response.rowCount;
   }
 
-//   crear un like
+  //   crear un like
   async setLike(postId: string, userId: string) {
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString();
     const sql = `insert into ${this.table_like}(postId, userId, createdAt) values($1, $2, $3) `;
     await query(sql, [postId, userId, formattedDate]);
+  }
+
+  //   quitar el linke
+  async removeLike(postId: string, userId: string) {
+    const sql = `delete from ${this.table_like} where postId=$1 and userId=$2`;
+    await query(sql, [postId, userId]);
   }
 }
 
