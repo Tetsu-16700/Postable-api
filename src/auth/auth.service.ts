@@ -88,7 +88,7 @@ class AuthService {
   }
 
 // validacion de token
-  private async validateToken(token: string) {
+  async validateToken(token: string) {
     try {
       const token_decrypt: any = jwt.verify(token, "super-secret");
       const res_user = await userService.findUserById(token_decrypt.id);
