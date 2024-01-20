@@ -13,7 +13,7 @@ class PostMiddleware {
     }
   }
 
-  // esidtar post
+  // editar post
   async edit(req: Request, res: Response, next: NextFunction) {
     try {
       editPostDTO.parse(req.body);
