@@ -52,6 +52,25 @@ class PostQuery {
     const sql = `delete from ${this.table_like} where postId=$1 and userId=$2`;
     await query(sql, [postId, userId]);
   }
+
+  // get posts
+  async getPostsClean(userId?: string) {
+    if (userId) {
+      const sql = `select*from ${this.table_post} where userId=$1`;
+      const response = await query(sql, [userId]);
+      return response.rows;
+    } else {
+      const sql = `select*from ${this.table_post} `;
+      const response = await query(sql);
+      return response.rows;
+    }
+  }
+
+  async getPosts(rest_sql: string) {
+    const sql = `select*from ${this.table_post} ${rest_sql}`;
+    const response = await query(sql);
+    return response.rows;
+  }
 }
 
 export const postQuery = new PostQuery();

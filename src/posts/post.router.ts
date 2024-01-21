@@ -6,6 +6,7 @@ const postRouter = express.Router();
 
 const prefix = "/posts";
 
+postRouter.get(`${prefix}`, postController.getPosts);
 postRouter.post(`${prefix}`, postMiddleware.create, postController.create);
 postRouter.patch(`${prefix}/:id`, postMiddleware.edit, postController.edit);
 postRouter.post(`${prefix}/:postId/like`, postController.like);

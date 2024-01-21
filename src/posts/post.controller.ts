@@ -55,6 +55,16 @@ class PostController {
       res.status(error.code).json(error.response);
     }
   }
+
+  // get posts
+  async getPosts(req: Request, res: Response) {
+    const response: any = await postService.getPosts(req.query);
+    if (response.response) {
+      res.status(response.code).json(response.response);
+    } else {
+      res.status(200).json(response);
+    }
+  }
 }
 
 export const postController = new PostController();
