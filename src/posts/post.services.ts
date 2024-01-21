@@ -1,4 +1,5 @@
 import { authService } from "../auth/auth.service";
+import { userService } from "../auth/user.service";
 import { responseHTTP } from "../model/response";
 import { postQuery } from "./post.query";
 
@@ -116,6 +117,52 @@ class PostService {
       };
 
       return responseHTTP.http200("Set like", format);
+    } catch (error) {
+      return responseHTTP.http500(undefined, error);
+    }
+  }
+
+  // get post
+  async getPosts(filters: any) {
+    try {
+      let sql = "";
+      let res_user: any;
+
+      if (filters.username) {
+        res_user = await userService.findUser(filters.username);
+        if (!res_user.response.ok) return res_user;
+        sql += ` where userid = ${res_user.response.data.id}`;
+      }
+
+      if (filters.order) {
+        sql += ` order by content ${filters.order} `;
+      }
+
+      const limit = filters.limit ? Number(filters.limit) : 10;
+      const page = filters.page ? Number(filters.page) : 1;
+      const min = limit * page - limit;
+      sql += ` limit ${limit} offset ${min}`;
+
+      const res_posts = await postQuery.getPosts(sql);
+      const res_post_clean = await postQuery.getPostsClean(
+        res_user.response.data.id
+      );
+
+      const formatResponse = {
+        ok: true,
+        data: res_posts,
+        pagination: {
+          page,
+          pageSize: res_posts.length,
+          totalItems: res_post_clean.length,
+          totalPages: Math.round(res_post_clean.length / limit),
+          nextPage:
+            page >= Math.round(res_post_clean.length / limit) ? null : page + 1,
+          previousPage:
+            page >= Math.round(res_post_clean.length / limit) ? page - 1 : null,
+        },
+      };
+      return formatResponse;
     } catch (error) {
       return responseHTTP.http500(undefined, error);
     }
